@@ -97,3 +97,27 @@ def inv_normal_cdf(p, mu=0, sigma=1, tolerance=1e-6):
 
 print(inv_normal_cdf(0.8))
 # page 96
+
+def bernoulli_trial(p):
+    return 1 if random.random() < p else 0
+
+def binomial(n, p):
+    return sum(bernoulli_trial(p) for _ in range(n))
+
+from collections import Counter
+def make_hist(p, n, num_points):
+    # random generated data
+    d = [ binomial(n, p) for _ in range(num_points) ]
+    histogram = Counter(d)
+    xs = [x-0.4 for x in histogram.keys()]
+    ys = [y/num_points for y in histogram.values()]
+    plt.bar(xs, ys, 0.8, color='0.75')
+
+    # theoretical value
+    mu = p*n
+    sigma = math.sqrt(n*p*(1-p))
+    xs = range(min(d), max(d)+1)
+    plt.plot(xs, [normal_pdf(x, mu=mu, sigma=sigma) for x in xs])
+    plt.show()
+
+make_hist(0.75, 100, 10000)
