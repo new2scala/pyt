@@ -45,3 +45,55 @@ prob_d_t = prob_t_d*prob_d / (prob_t_d*prob_d + prob_t_xd*prob_xd)
 print(prob_d_t)
 
 #page 91
+def normal_pdf(x, mu=0, sigma=1):
+    sqrt_2pi = math.sqrt(2*math.pi)
+    ex = math.exp(-(x-mu)**2 / 2 / sigma**2)
+    return ex / (sqrt_2pi*sigma)
+
+def trans(x, func, *args, **kwargs):
+    return func(x, *args, **kwargs)
+
+import matplotlib.pyplot as plt
+def plot(v, func):
+    l01, = plt.plot(v, [trans(x, func) for x in xs], '-', label='mu=0,sigma=1')
+    l02, = plt.plot(v, [trans(x, func, sigma=2) for x in xs], '--', label='mu=0,sigma=2')
+    l005, = plt.plot(v, [trans(x, func, sigma=0.5) for x in xs], ':', label='mu=0,sigma=0.5')
+    l_11, = plt.plot(v, [trans(x, func, mu=-1, sigma=1) for x in xs], '-.', label='mu=-1,sigma=1')
+    plt.legend(handles=[l01, l02, l005, l_11])
+    plt.show()
+
+xs = [x/10 for x in range(-50, 50)]
+#plot(xs, normal_pdf)
+
+def normal_cdf(x, mu=0, sigma=1):
+    return (1 + math.erf( (x-mu) / math.sqrt(2) / sigma)) / 2
+#plot(xs, normal_cdf)
+'''
+xs = [x/10 for x in range(-50, 50)]
+
+import matplotlib.pyplot as plt
+l01, = plt.plot(xs, [normal_cdf(x) for x in xs], '-', label='mu=0,sigma=1')
+l02, = plt.plot(xs, [normal_cdf(x,sigma=2) for x in xs], '--', label='mu=0,sigma=2')
+l005, = plt.plot(xs, [normal_cdf(x,sigma=0.5) for x in xs], ':', label='mu=0,sigma=0.5')
+l_11, = plt.plot(xs, [normal_cdf(x,mu=-1,sigma=1) for x in xs], '-.', label='mu=-1,sigma=1')
+plt.legend(handles=[l01, l02, l005, l_11])
+plt.show()
+'''
+
+def inv_normal_cdf(p, mu=0, sigma=1, tolerance=1e-6):
+    low_x, low_p = -16, 0
+    high_x, high_p = 16, 0
+
+    while high_x-low_x > tolerance:
+        mid_x = (high_x+low_x)/2
+        mid_p = normal_cdf(mid_x)
+        if (mid_p < p):
+            low_x = mid_x
+        elif (mid_p > p):
+            high_x = mid_x
+        else:
+            break
+    return mid_x
+
+print(inv_normal_cdf(0.8))
+# page 96
