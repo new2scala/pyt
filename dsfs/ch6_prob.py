@@ -81,12 +81,16 @@ plt.show()
 '''
 
 def inv_normal_cdf(p, mu=0, sigma=1, tolerance=1e-6):
+    # if not standard, compute standard and rescale
+    if mu != 0 or sigma != 1:
+        return mu + sigma * inv_normal_cdf(p, tolerance=tolerance)
+
     low_x, low_p = -16, 0
     high_x, high_p = 16, 0
 
     while high_x-low_x > tolerance:
         mid_x = (high_x+low_x)/2
-        mid_p = normal_cdf(mid_x)
+        mid_p = normal_cdf(mid_x, mu, sigma)
         if (mid_p < p):
             low_x = mid_x
         elif (mid_p > p):
