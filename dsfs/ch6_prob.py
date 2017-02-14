@@ -124,4 +124,4 @@ def make_hist(p, n, num_points):
     plt.plot(xs, [normal_pdf(x, mu=mu, sigma=sigma) for x in xs])
     plt.show()
 
-make_hist(0.75, 100, 10000)
+#make_hist(0.75, 100, 10000)

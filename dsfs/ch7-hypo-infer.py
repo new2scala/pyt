@@ -21,5 +21,36 @@ def normal_2sided_bounds(prob, mu=0, sigma=1):
 
 mu_0, sigma_0 = normal_approx_to_binomial(1000, 0.5)
 print((mu_0, sigma_0))
+mu_1, sigma_1 = normal_approx_to_binomial(1000, 0.55)
+print((mu_1, sigma_1))
 
-normal_2sided_bounds(0.95, mu_0, sigma_0)
+low, hi = normal_2sided_bounds(0.95, mu_0, sigma_0)
+print(normal_2sided_bounds(0.95, mu_1, sigma_1))
+
+t2_prob = normal_prob_btw(low, hi, mu_1, sigma_1)
+print("t2 prob: %f" % t2_prob)
+
+'''
+to verify the prob of falling between low and hi is actually close to 95%
+'''
+import random
+def flip_trial(num, low, hi):
+    sum = 0
+    for _ in range(num):
+        sum += random.choice([0, 1])
+    if (sum < low or sum > hi):
+        return 0
+    else:
+        return 1
+
+def verify_bound(total_trial, low, hi):
+    inside = 0
+    for _ in range(total_trial):
+        inside += flip_trial(1000, low, hi)
+
+    print("%d / %d" % (inside, total_trial))
+
+#verify_bound(1000, low, hi)
+
+
+
