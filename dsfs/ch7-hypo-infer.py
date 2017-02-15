@@ -52,5 +52,21 @@ def verify_bound(total_trial, low, hi):
 
 #verify_bound(1000, low, hi)
 
+def two_sided_p_value(x, mu=0, sigma=1):
+    if x > mu:
+        return 2*(1 - normal_cdf(x, mu, sigma))
+    else:
+        return 2*normal_cdf(x, mu, sigma)
 
+def one_sided_p_value(x, mu=0, sigma=1):
+    if x > mu:
+        return (1 - normal_cdf(x, mu, sigma))
+    else:
+        return normal_cdf(x, mu, sigma)
+
+print(two_sided_p_value(529.5, mu_0, sigma_0))
+print(two_sided_p_value(531.5, mu_0, sigma_0))
+
+print(one_sided_p_value(524.5, mu_0, sigma_0))
+print(one_sided_p_value(526.5, mu_0, sigma_0))
 
